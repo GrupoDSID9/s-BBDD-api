@@ -1,0 +1,10 @@
+api:
+  name: "s-bbdd-api"
+  port: "8083"
+  
+dynamoDB:
+  AccessKey: ASIA6HRQW4O7NBU3ODPU
+  SecretKey: L7OZkOpocgRU91Vq79NmUFf5h8n2iXlW2jxY2irA
+  token: FwoGZXIvYXdzENj//////////wEaDABFezIYyfx4StnqByLHARSkrZ1tn4HeakdsvUNghp4+zIBb04/fd6rWEvY8JKUmfKbfjIzkztRtCFYwhbiH5W9EbkJEh9GIOWpCAvV8N8fHH3EFri0ByRPm0XXqjF9mELHSrKsjMhvllm6rE2amaPkGkqyFJIRqEaAAeovr8WeXrjN3IDvrc9d5ILxybc07REZlMV4a0BazMZkbJE1BSJIDjh8QBLkiwz0kF4IopIoNe/Qz6UISg9RzWoIkxijK3laBVYTGOJ4/w1RQZun7voD/dv28HlsovYutqwYyLeC7CsedzDGYndm87d0IDxa2nbsMjNeLd8F/3CcPCgvmJ1bs5x6amWeFKHMT9Q==
+  
+  

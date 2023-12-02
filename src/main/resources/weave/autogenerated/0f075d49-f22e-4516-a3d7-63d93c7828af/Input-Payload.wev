@@ -1,0 +1,13 @@
+%dw 2.0
+
+type auto_0f075d49_f22e_4516_a3d7_63d93c7828af_Input_Payload = {
+  author: String, 
+  postMessage: String, 
+  postCode: String, 
+  socialMedia: String, 
+  title: String, 
+  translate: Boolean, 
+  timestamp: String, 
+  _?: Any
+}
+
