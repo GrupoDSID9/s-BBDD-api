@@ -62,7 +62,7 @@ output application/json
 		"S": payload.postMessage
 	},
 	"translate":{
-		"B": payload.translate
+		"Bool": payload.translate
 	},
 	"timestamp":{
 		"S": payload.timestamp
