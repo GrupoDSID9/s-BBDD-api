@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns:dynamodb="http://www.mulesoft.org/schema/mule/dynamodb"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:dynamodb="http://www.mulesoft.org/schema/mule/dynamodb" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/dynamodb http://www.mulesoft.org/schema/mule/dynamodb/current/mule-dynamodb.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
 	<sub-flow name="implementationSub_Flow_Get" doc:id="b26af347-f026-417c-948d-0fa7f0a4d0a7" >
 		<dynamodb:scan doc:name="Scan" doc:id="26867e44-a045-492a-9855-a3cd19f08ff3" config-ref="Amazon_DynamoDB_Configuration" select="ALL_ATTRIBUTES" tableName="publicaciones"/>
 		<ee:transform doc:name="To JSON" doc:id="6ce89da0-c186-48af-aeff-f9dd7fb3a103" >
@@ -22,8 +25,8 @@ payload.items]]></ee:set-payload>
 	<sub-flow name="implementationSub_Flow_GetId" doc:id="fe870f58-a8b3-4265-b0cd-6b784845dba7" >
 		<dynamodb:get-item doc:name="Get item" doc:id="3e770333-eeeb-40ef-928d-2dae1862982b" config-ref="Amazon_DynamoDB_Configuration" tableName="publicaciones">
 			<dynamodb:key><![CDATA[#[{
-	postCode: {
-		S: attributes.uriParams.'id'
+	id: {
+		S: attributes.uriParams.id
 	}
 }]]]></dynamodb:key>
 		</dynamodb:get-item>
@@ -40,38 +43,57 @@ payload.item]]></ee:set-payload>
 	</sub-flow>
 	<sub-flow name="implementationSub_Flow_Post" doc:id="0f075d49-f22e-4516-a3d7-63d93c7828af" >
 		<logger level="INFO" doc:name="Logger" doc:id="855675bf-6d2e-4ac4-af1e-5668f6a40f66" message="#[payload]"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="fba90db0-7e39-42b2-a073-5bff4ac39fc9" variableName="post" />
 		<ee:transform doc:name="Request Data to JSON" doc:id="77466a7b-82df-433d-9a06-9d581d310099" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 {
+	"id":{
+		"S": uuid()
+	},
 	"postCode":{
 		"S": payload.postCode
-	},
-	"socialMedia": {
-		"S": payload.socialMedia
 	},
 	"title":{
 		 "S": payload.title
 	},
+	"message":{
+		"S": payload.message
+	},
 	"author":{
 		"S": payload.author
 	},
-	"postMessage":{
-		"S": payload.postMessage
-	},
-	"translate":{
-		"Bool": payload.translate
-	},
 	"timestamp":{
 		"S": payload.timestamp
-	}	
-	
+	},
+	"toSocialMedia": {
+		"S": payload.toSocialMedia
+	},
+	"translation":{
+		"Bool": payload.translation
+	}
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Request Data" doc:id="11606e3c-6e13-461e-88dd-e503011e1144" message="#[payload]"/>
 		<dynamodb:put-item doc:name="Put item" doc:id="7dad3d98-0121-467a-8b1f-d728f75e7ac4" config-ref="Amazon_DynamoDB_Configuration" tableName="publicaciones"/>
+		<email:send doc:name="Send" doc:id="3aa48a68-c9a8-4166-9cc8-5412a105387f" config-ref="Email_SMTP" fromAddress="hack9Catedra@gmail.com" subject="New Post in the DB">
+			<email:to-addresses >
+				<email:to-address value="hack9Catedra@gmail.com" />
+			</email:to-addresses>
+			<email:body contentType="text/plain">
+				<email:content ><![CDATA[#[vars.post]]]></email:content>
+			</email:body>
+		</email:send>
+	</sub-flow>
+	<sub-flow name="ErrorMail" doc:id="5ab64e98-103b-485b-97cd-8c254591ddfc" >
+		<email:send doc:name="Send" doc:id="b16dadd7-2be5-4da8-9bc8-830a1191e95d" config-ref="Email_SMTP" fromAddress="hack9Catedra@gmail.com" subject="Post not saved">
+			<email:to-addresses >
+				<email:to-address value="hack9Catedra@gmail.com" />
+			</email:to-addresses>
+			<email:body contentType="text/plain" />
+		</email:send>
 	</sub-flow>
 </mule>

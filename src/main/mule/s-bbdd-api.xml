@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
     <flow name="s-bbdd-api-main">
         <http:listener config-ref="s-bbdd-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -18,12 +18,16 @@
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Bad request"}]]></ee:set-payload>
+{
+	message: "Err.400 - Bad request",
+	payload: payload
+}]]></ee:set-payload>
                     </ee:message>
                     <ee:variables>
-                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
+                <flow-ref doc:name="Flow Reference" doc:id="294d60b4-9623-4ed1-a3e8-94397207dd43" name="ErrorMail" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_FOUND">
                 <ee:transform doc:name="Transform Message">
@@ -31,12 +35,16 @@ output application/json
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Resource not found"}]]></ee:set-payload>
+{
+	message: "Err.404 - Resource not found",
+	payload: payload
+}]]></ee:set-payload>
                     </ee:message>
                     <ee:variables>
-                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
+                <flow-ref doc:name="Flow Reference" doc:id="a05cd5a3-9301-4e58-a0aa-2db54df706aa" name="ErrorMail" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
                 <ee:transform doc:name="Transform Message">
@@ -44,12 +52,16 @@ output application/json
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Method not allowed"}]]></ee:set-payload>
+{
+	message: "Err.405 - Method not allowed",
+	payload: payload
+}]]></ee:set-payload>
                     </ee:message>
                     <ee:variables>
-                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
+                <flow-ref doc:name="Flow Reference" doc:id="10f96c1c-4e4d-43e3-88c4-84e5357320d6" name="ErrorMail" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
                 <ee:transform doc:name="Transform Message">
@@ -57,12 +69,16 @@ output application/json
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Not acceptable"}]]></ee:set-payload>
+{
+	message: "Err.406 - Not acceptable",
+	payload: payload
+}]]></ee:set-payload>
                     </ee:message>
                     <ee:variables>
-                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
+                <flow-ref doc:name="Flow Reference" doc:id="5aefe714-672e-4983-83fa-4a83fc5313f9" name="ErrorMail" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
                 <ee:transform doc:name="Transform Message">
@@ -70,12 +86,16 @@ output application/json
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Unsupported media type"}]]></ee:set-payload>
+{
+	message: "Err.415 - Unsupported media type",
+	payload: payload
+}]]></ee:set-payload>
                     </ee:message>
                     <ee:variables>
-                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
+                <flow-ref doc:name="Flow Reference" doc:id="9294ddfc-46c0-4709-9c4b-655f7e0eddfc" name="ErrorMail" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
                 <ee:transform doc:name="Transform Message">
@@ -83,12 +103,16 @@ output application/json
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{message: "Not Implemented"}]]></ee:set-payload>
+{
+	message: "Err.501 - Not Implemented",
+	payload: payload
+}]]></ee:set-payload>
                     </ee:message>
                     <ee:variables>
-                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
                     </ee:variables>
                 </ee:transform>
+                <flow-ref doc:name="Flow Reference" doc:id="d0174c3a-b25b-4c53-a615-89de81ba759e" name="ErrorMail" />
             </on-error-propagate>
         </error-handler>
     </flow>
@@ -119,15 +143,15 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="get:\SocialMediaPosts:s-bbdd-api-config" doc:id="83cead48-0756-41f8-8e94-db82b6d70c7b">
-        <flow-ref doc:name="Flow Reference" doc:id="40d1c75c-372e-430d-82b4-9a9f3168686d" name="implementationSub_Flow_Get"/>
+    <flow name="get:\socialmediaposts:s-bbdd-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="40d1c75c-372e-430d-82b4-9a9f3168686d" name="implementationSub_Flow_Get" />
     </flow>
-    <flow name="get:\SocialMediaPosts\(id):s-bbdd-api-config" doc:id="9b7df3e0-e64f-4c04-9eb4-ce42230133c4">
-        <flow-ref doc:name="Flow Reference" doc:id="157adfa9-18ee-4fbc-9eae-f2eeaa9e2fd3" name="implementationSub_Flow_GetId"/>
+    <flow name="get:\socialmediaposts\(id):s-bbdd-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="157adfa9-18ee-4fbc-9eae-f2eeaa9e2fd3" name="implementationSub_Flow_GetId" />
     </flow>
-    <flow name="post:\SocialMediaPosts:application\json:s-bbdd-api-config" doc:id="17d66d28-4662-4395-97fb-8c67c9ec852f">
-        <flow-ref doc:name="Flow Reference" doc:id="95b0474c-f30d-48a5-acb9-d3d2a128e5a6" name="implementationSub_Flow_Post"/>
-		<ee:transform doc:name="Transform Message">
+    <flow name="post:\socialmediaposts:application\json:s-bbdd-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="95b0474c-f30d-48a5-acb9-d3d2a128e5a6" name="implementationSub_Flow_Post" />
+        <ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json

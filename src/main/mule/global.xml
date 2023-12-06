@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<mule xmlns:dynamodb="http://www.mulesoft.org/schema/mule/dynamodb"
-	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/dynamodb http://www.mulesoft.org/schema/mule/dynamodb/current/mule-dynamodb.xsd">
-	
-	<http:listener-config name="s-bbdd-api-httpListenerConfig">
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:dynamodb="http://www.mulesoft.org/schema/mule/dynamodb" xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/dynamodb http://www.mulesoft.org/schema/mule/dynamodb/current/mule-dynamodb.xsd http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+    <http:listener-config name="s-bbdd-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="${api.port}" />
     </http:listener-config>
-    <apikit:config name="s-bbdd-api-config" api="resource::6bfdfbd6-1d2e-4ffc-96e4-3a6ab65c6e06:s-bbdd-api:1.0.0:raml:zip:s-bbdd-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-	<global-property doc:name="Global Property" doc:id="230bbb9c-6c56-49a3-84a2-eed094274639" name="env" value="local" />
-	<configuration-properties doc:name="Configuration properties" doc:id="afa57f21-0f4f-4219-8afd-1a18605c564b" file="properties/${env}.yaml" />
-	<dynamodb:config name="Amazon_DynamoDB_Configuration" doc:name="Amazon DynamoDB Configuration" doc:id="896be3c9-c566-4e79-9b48-61decb86e4b1" >
-		<dynamodb:basic-connection sessionToken="${dynamoDB.token}" accessKey="${dynamoDB.AccessKey}" secretKey="${dynamoDB.SecretKey}" />
-	</dynamodb:config>
-    
-	
+    <apikit:config name="s-bbdd-api-config" api="resource::6bfdfbd6-1d2e-4ffc-96e4-3a6ab65c6e06:s-bbdd-api:1.0.3:raml:zip:s-bbdd-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <global-property doc:name="Global Property" doc:id="230bbb9c-6c56-49a3-84a2-eed094274639" name="env" value="local" />
+    <configuration-properties doc:name="Configuration properties" doc:id="afa57f21-0f4f-4219-8afd-1a18605c564b" file="properties/${env}.yaml" />
+    <dynamodb:config name="Amazon_DynamoDB_Configuration" doc:name="Amazon DynamoDB Configuration" doc:id="896be3c9-c566-4e79-9b48-61decb86e4b1">
+        <dynamodb:basic-connection sessionToken="${dynamoDB.token}" accessKey="${dynamoDB.AccessKey}" secretKey="${dynamoDB.SecretKey}" />
+    </dynamodb:config>
+    <email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="ad1d2b26-d163-4117-b259-349708589854">
+        <email:smtps-connection host="smtp.gmail.com" user="hack9Catedra@gmail.com" password="lffw oddo sljs qwho">
+            <tls:context>
+                <tls:trust-store insecure="true" />
+            </tls:context>
+        </email:smtps-connection>
+    </email:smtp-config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="c2a365fd-80ba-4fad-87f8-c04434af069d" file="properties\${env}.yaml" key="hackathon9" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
 </mule>
