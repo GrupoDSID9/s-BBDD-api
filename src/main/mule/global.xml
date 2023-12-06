@@ -17,7 +17,4 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
             </tls:context>
         </email:smtps-connection>
     </email:smtp-config>
-	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="c2a365fd-80ba-4fad-87f8-c04434af069d" file="properties\${env}.yaml" key="hackathon9" >
-		<secure-properties:encrypt algorithm="Blowfish" />
-	</secure-properties:config>
 </mule>
