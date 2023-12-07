@@ -1,12 +1,11 @@
 api:
   name: "s-bbdd-api"
-  port: "8085"
+  port: "8081"
   
 dynamoDB:
-  AccessKey: ASIA6HRQW4O7LHJX2ZGZ
-  SecretKey: j5S1Cv/dRPAjPGTcdcQpTYvA6FvcbTtioOLmMj7x
-  token: FwoGZXIvYXdzEDMaDNejg/lt3UVQQ23qbyLHAcFEk2SzSzbNtrrNHVJ2c6LTws/IdEgCeJlmWJ8Pbh03DfZ8EiuLmoult+6KjTkfjJN/1XvetPgyCOAFsrp+ZCdj0gJYLygGrXDYrTJOOGCi+rbPFEh/rmbh9fm2UxyCCaqxyQ2yhtjELPvZKfd3jTAQTNaA+IefDAUcUUBKWKDSqTOKjwxQssPwDOPRvvgtcpANi0KpvGedWsoiDusTaWLWFf52rxjqeVuQ9GqexenXpld2fYzAmaxIjur13Ap2wkK+qShC+IUok/TAqwYyLTsGHxMEeXogcz/b1YzP8mNSJ9Sw0Kn/mepPd1sTrPILXws45IoHf2xJCI2lcA==
-  
+  AccessKey: ASIA6HRQW4O7D3LMPBVT
+  SecretKey: kp+MBWzbl+ga6BAJ1HpUlx5Th58V9y8jBJApCsJn
+  token: FwoGZXIvYXdzEEwaDC7ykOd7pd95FEzAnSLHAXGanAYz0pM2LPbus3ZKkn0t1+HrlJ94y9nstyxDYh5uoThF1kSuGHW6Om/PftfMfJMuaTrGLqCMvzvP5MwtIXKEkHPu8i3bp/eIekim54DRWdCiOWayie7h4O0mO6pHDalIL4tcvE+ofiKeuQ7dzXPnqCLPkCgQ/mL4FXgLzoJYsisQVu4Jgn9hBAxkyKLBvST0kro5NoJn2zv22YU4j+5n3ciMG+FvvGxwsVEoGQ74epOgUN5nDNedLuZch3k8+y4E3jkjX0Io3rnGqwYyLQZSkiL6ZhQjhdOc3Hsh00nwTmmjiqg49GGQrAZ+4uA6QNkKmQWTUzS6WDy0Eg==
   
   
   
