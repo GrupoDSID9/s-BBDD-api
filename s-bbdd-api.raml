@@ -1,0 +1,106 @@
+#%RAML 1.0
+title: s-BBDD-api
+description: System API for posts CRUD
+mediaType: 
+ - application/json
+version: "v1"
+protocols:
+ - HTTP
+
+types:
+  # Objeto para hacer POST a las redes sociales
+  SocialMediaPost:
+    type: object
+    properties:
+      postCode: string
+      title: string
+      message: string
+      author: string
+      timestamp: string
+      toSocialMedia: 
+        type: string
+        enum: [TW, FB, ALL]
+      translation: boolean
+
+  # Objeto de consultar la base de datos con las columnas que quieras.
+  PostedSocialMediaPost:
+    type: object
+    properties:
+      id: string
+      postCode: string
+      title: string
+      message: string
+      author: string
+      timestamp: string
+      toSocialMedia: 
+        type: string
+        enum: [TW, FB, ALL]
+      translation: boolean
+
+/socialmediaposts:
+  post:
+    displayName: Save post DB
+    description: Save published post in the DB
+    body:
+      type: SocialMediaPost
+    responses:
+      201:
+        body:   
+          type: string
+          example: "Publicaciones guardadas correctamente."
+      400:
+        body:
+          type: string
+          example: "Bad Request"
+      404:
+        body:
+          type: string
+          example: "Not Found"    
+      500:
+        body:
+          type: string
+          example: "Server not available"  
+  
+  get:
+    displayName: Get Social Media Posts
+    description: Get all posts saved in the DB
+    responses:
+      201:
+        body:   
+          type: PostedSocialMediaPost  [] #Array con las publicaciones
+      400:
+        body:
+          type: string
+          example: "Bad request"
+      404:
+        body:
+          type: string
+          example: "Not Found"    
+      500:
+        body:
+          type: string
+          example: "Server not available" 
+
+
+/socialmediaposts/{id}:
+  get:
+    displayName: Get Social Media Post (id)
+    description: Get post by id
+    responses:
+      201:
+        body:   
+          type: PostedSocialMediaPost
+      400:
+        body:
+          type: string
+          example: "Bad request"
+      404:
+        body:
+          type: string
+          example: "Not Found"    
+      500:
+        body:
+          type: string
+          example: "Server not available" 
+
+  
